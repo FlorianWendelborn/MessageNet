@@ -1,0 +1,2 @@
+{ "name" : "messagenet-rss",
+  "main" : "./index.js" }
