@@ -1,14 +1,115 @@
+# general idea
+- Recipe = (Channel->Event)->Data->(C.+Filter)->(Action<-Channel)
+- Options for Channel, Event, C., Filter, Action, maybe even for data
+- Event delivers data
+	- can be trigger or request
+- C.+Filter processes data
+	- C. emits true or false
+	- Filters change data
+- Actions do stuff with data
+
+# recipe
+{
+	"events":[
+		{// create a rss feedsub stream
+			"module": "rss",
+			"type": "feedsub",
+			"id": 0,
+			"options": {
+				"stuff": true
+			},
+			"slots": {// will pipe the title slot to slot 0 of the http/https filter
+				"title": {
+					"pipeTo": {
+						"type": "filter",
+						"id": 0,
+						"slot": 0
+					}
+				}
+			}
+		},{
+			"module": "time",
+			"type": "current",
+			"id": 1,
+			"options": {
+				"stuff": true
+			}
+		}
+	],
+	"actions":[
+		{// create a growl notify action
+			"module": "growl",
+			"type": "notify",
+			"id?": 0,
+			"slots": [
+				{
+					"id": 0,
+					"type": "title",
+				},
+				{
+					"id": 1,
+					"type": "text"
+				}
+			],
+			"options": {
+				"sticky": false,
+				"priority": 0,
+				"etc": true
+			}
+		}
+	],
+	"filters":[
+		{// this will exchange every link from http to https
+			"type": "replace",
+			"value": ["http://","https://"],
+			"pipeTo": {
+				"type": "action",
+				"id": 0,
+				"slot": 1
+			}
+		}
+	],
+	"c":[
+		{// allows every message containing "OMG" to trigger
+			"type": "contains",
+			"value": ["OMG"],
+			"pipeTo": {
+				"type": "action",
+				"id": 0,
+				"slot": 0,// 0 is default
+			}
+		},
+		{// allows every message emitted at *:42:00-*:42:59 to trigger
+			"type": "equals",
+			"value": 42,
+			"pipeTo": {
+				"type": "action",
+				"id": 0,
+				"slot": 0
+			}
+		}
+	]
+}
+
 # request
 {
 	"id":"requestingServer's id",
 	"message":"encryptedMessage"
 }
 
-#message
+#message v0.1
 {
 	"from":"moduleName,id,whatever",
 	"data":{
 		
+	}
+}
+#message v0.2
+{
+	"module": "moduleName",
+	"event": "eventName",
+	"data": {
+		"stuff": true
 	}
 }
 

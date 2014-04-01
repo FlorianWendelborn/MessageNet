@@ -1,0 +1,2 @@
+{ "name" : "messagenet-growl",
+  "main" : "./index.js" }
