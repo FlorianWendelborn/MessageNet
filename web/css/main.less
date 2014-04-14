@@ -1,0 +1,77 @@
+@import "lesshat.less";
+@import "layout.less";
+@import "mixins.less";
+
+@textColor: #CCC;
+@antiTextColor: #333;
+@debugColor: #F00;
+
+@separationColor: #CCC;
+
+@lightGradientColor: #444;
+@darkGradientColor: #111;
+
+@lightAntiGradientColor: #FFF;
+@darkAntiGradientColor: #CCC;
+
+/* Style */
+
+header {
+	.gradient(linear-gradient(@darkGradientColor, @lightGradientColor));
+	border-bottom: 1px solid @separationColor;
+	.user-select(none);
+	.center;
+	padding: 0 100px;
+}
+
+header a {
+
+	// tab layout
+
+	float: left;
+	
+	// decoration
+
+	text-decoration: none;
+	color: @textColor;
+	height: 20px;
+	margin: 0 5px 0 0;
+	padding: 10px;
+	font-size: 20px;
+}
+
+header a.active {
+	.gradient(linear-gradient(@darkAntiGradientColor, @lightAntiGradientColor));
+	color: @antiTextColor;
+}
+
+// icon
+header a:first-child {
+	height: 32px;
+	padding: 4px;
+}
+
+footer {
+	border-top: 1px solid @separationColor;
+	.gradient(linear-gradient(@lightGradientColor, @darkGradientColor));
+	.user-select(none);
+}
+
+footer a {
+	text-decoration: none;
+	color: @textColor;
+}
+
+/* Lorem Ipsum */
+
+main {
+	.user-select(none);
+}
+
+main ul > li {
+	padding: 20px;
+}
+
+details, details > p {
+	margin: 0 0 0 20px;
+}

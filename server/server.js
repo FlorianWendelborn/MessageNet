@@ -1,18 +1,21 @@
-const net = require('net');
-const http = require('http');
-const fs = require('fs');
-const crypto = require(__dirname + '/crypto.js');
-const growler = require('growler');
+var net = require('net');
+var http = require('http');
+var fs = require('fs');
+var path = require('path');
 
-var config = JSON.parse(fs.readFileSync(__dirname + '/config.json'));
+var express = require('express');
+var crypto = require(__dirname + '/crypto.js');
+var growler = require('growler');
+
+var config = JSON.parse(fs.readFileSync(__dirname + '/../config.json'));
 var db = require('./database/main.js');
 
 var servers = new Object();
 
 // getting growl icons
-const icon = require('fs').readFileSync(__dirname + '/icons/nodejs.png');
-const minecraft = require('fs').readFileSync(__dirname + '/icons/minecraft.png');
-const rss = require('fs').readFileSync(__dirname + '/icons/rss.png');
+var icon = require('fs').readFileSync(__dirname + '/icons/nodejs.png');
+var minecraft = require('fs').readFileSync(__dirname + '/icons/minecraft.png');
+var rss = require('fs').readFileSync(__dirname + '/icons/rss.png');
 
 // configure growl
 var growl = new growler.GrowlApplication('Messagenet');
@@ -36,19 +39,22 @@ growl.setNotifications({
 });
 growl.register();
 
-// configure http
-servers.http = http.createServer(function (req, res) {
-	res.writeHead(200, {'Content-Type': 'text/html'});
-	res.end('<!doctype html><html><head><title>MessageNet</title></head><body style="background-color: #000"><span style="color: #0f0">This is not the MessageNet.</span></body></html>');
-}).listen(config.http.port, '127.0.0.1', function () {
-	console.log('HTTP server running on port ' + config.http.port);
+/*--------------------------------------------------[express]--------------------------------------------------*/
+
+var app = express();
+app.listen(config.http.port, function () {
+	console.log('express is running on port ' + config.http.port);
 	growl.sendNotification('Server Status', {
 		title: 'HTTP server online',
 		text: 'running on port ' + config.http.port
 	});
 });
+app.use(require('morgan')());
+app.use(require('body-parser')());
+app.use(require('method-override')());
+app.use(express.static(path.join(__dirname, '/../web/')));
 
-// configure tcp
+/*--------------------------------------------------[tcp]--------------------------------------------------*/
 servers.tcp = net.createServer(function (conn) {
 	console.log("server connected");
 

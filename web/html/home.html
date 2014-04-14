@@ -1,0 +1,6 @@
+<div ng-show="!loggedIn">
+	This is not the MessageNet. Go away.
+</div>
+<div ng-repeat="i in stuff" ng-show="loggedIn">
+	{{i.name}}: {{i.value}}% <meter value="{{i.value/100}}"></meter>
+</div>

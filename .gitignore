@@ -1,3 +1,7 @@
 config.json
-/database/db.json
-/icons/*
+server/database/db.json
+server/icons/*
+server/ssl/*
+wip/
+tests/
+web/lib/*

@@ -1,0 +1,30 @@
+<article ng-repeat="module in modules">
+	<details>
+		<summary>{{module.name}} version {{module.version}}</summary>
+		<p>
+			{{module.description}}
+			By {{module.author}}.
+		</p>
+		<details ng-show="module.events.length>0">
+			<summary>{{module.events.length}} events</summary>
+			<details ng-repeat="event in module.events">
+				<summary>{{event.name}}</summary>
+				{{event.description}}
+			</details>
+		</details>
+		<details ng-show="module.actions.length>0">
+			<summary>{{module.actions.length}} actions</summary>
+			<details ng-repeat="action in module.actions">
+				<summary>{{action.name}}</summary>
+				{{action.description}}
+			</details>
+		</details>
+		<details ng-show="module.options.length>0">
+			<summary>{{module.options.length}} options</summary>
+			<details ng-repeat="option in module.options">
+				<summary>{{option.name}}</summary>
+				{{option.description}}
+			</details>
+		</details>
+	</details>
+</article>
