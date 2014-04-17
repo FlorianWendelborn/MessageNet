@@ -1,1 +1,30 @@
-active channels
+<article ng-repeat="channel in channels">
+	<details>
+		<summary>{{channel.name}} version {{channel.version}}</summary>
+		<p>
+			{{channel.description}}
+			By {{channel.author}}.
+		</p>
+		<details ng-show="channel.events.length>0">
+			<summary>{{channel.events.length}} events</summary>
+			<details ng-repeat="event in channel.events">
+				<summary>{{event.name}}</summary>
+				{{event.description}}
+			</details>
+		</details>
+		<details ng-show="channel.actions.length>0">
+			<summary>{{channel.actions.length}} actions</summary>
+			<details ng-repeat="action in channel.actions">
+				<summary>{{action.name}}</summary>
+				{{action.description}}
+			</details>
+		</details>
+		<details ng-show="channel.options.length>0">
+			<summary>{{channel.options.length}} options</summary>
+			<details ng-repeat="option in channel.options">
+				<summary>{{option.name}}</summary>
+				{{option.description}}
+			</details>
+		</details>
+	</details>
+</article>

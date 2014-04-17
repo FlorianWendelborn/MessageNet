@@ -1,0 +1,2 @@
+{ "name" : "messagenet-database",
+  "main" : "./index.js" }

@@ -1,4 +1,6 @@
-const crypto = require('crypto'); 
+var crypto = require('crypto');
+
+// just in case somebody wants to change them 
 const algorithm = 'aes256';
 const input = 'utf8';
 const output = 'hex';

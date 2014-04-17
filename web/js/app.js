@@ -11,6 +11,7 @@ var app = angular.module('app', ['ngRoute', 'messageNetAPI']).config(function ($
 		})
 		.when( '/channels', {
 			templateUrl: 'html/channels.html',
+			controller: 'ChannelController',
 			requireLogin: true
 		})
 		.when( '/settings', {
@@ -56,84 +57,13 @@ app.controller('HomeController', function ($scope) {
 	}];
 });
 
+app.controller('ChannelController', function ($scope, Channels, Channel) {
+	Channels.get({},function(channels) {
+		$scope.channels = channels;
+	});
+});
+
 app.controller('ModuleController', function ($scope, Modules, Module) {
-	$scope.modules = [{
-		"name": "RSS",
-		"description": "Read or write data to RSS feeds.",
-		"version": "0.0.1",
-		"author": "dodekeract",
-		"icon": "./png/rss.png",
-		"events": [
-			{
-				"id":"feedItem",
-				"name": "New Item in Feed",
-				"description": "Will trigger everytime a new item is getting loaded.",
-				"options": {
-					"stuff": true
-				},
-				"data": {
-					"title": "text",
-					"text": "text"
-				}
-			},
-			{
-				"id":"someOtherEvent",
-				"name": "SomeOtherEvent",
-				"description": "Triggers randomly.",
-				"options": {
-					"stuff": true
-				},
-				"data": {
-					"title": "text"
-				}
-			}
-		],
-		"actions": [
-			{
-				"id":"addToFeed",
-				"name": "Adds Items to Feeds",
-				"description": "Will create an RSS feed and push all information gotten.",
-				"options": {
-					"stuff": true
-				}
-			}
-		],
-		"options": [
-			{
-				"id":"url",
-				"name": "URL",
-				"description": "Set the URL the RSS feed should pull from.",
-				"stuff": false
-			},
-			{"id":"someSetting",
-				"name": "Some setting.",
-				"description": "Specify the rate of random stuff per minute.",
-				"stuff": false
-			}
-		]
-	},{
-		"name": "realName",
-		"description": "This is not an exampleDescription.",
-		"version": "1.7.8",
-		"author": "dodekeract",
-		"icon": "default is moduleFolder/icon.png",
-		"events": {
-			"see": "##events",
-			"for": "more",
-			"information": "!"
-		},
-		"action": {
-			"see": "##actions",
-			"for": "more",
-			"information": "!"
-		},
-		"options": {
-			"see": "##options",
-			"for": "more",
-			"information": "!"
-		}
-	}];
-	//$scope.modules = MessageNetAPI.getBuffer("modules");
 	Modules.get({},function(modules) {
 		$scope.modules = modules;
 	});
