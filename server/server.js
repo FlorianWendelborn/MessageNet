@@ -3,7 +3,7 @@ console.log('  __  __                                _   _      _   \n |  \\/  |
 
 // native
 var net = require('net')
-  , http = require('http')
+  , https = require('https')
   , fs = require('fs')
   , path = require('path');
 
@@ -20,32 +20,21 @@ var crypto = require(__dirname + '/lib/messagenet-crypto/')
 
 var servers = new Object();
 
-/*--------------------------------------------------[reading files]--------------------------------------------------*/
-
-// getting icons
-var icons = {
-	nodejs: fs.readFileSync(__dirname + '/icons/nodejs.png'),
-	minecraf: fs.readFileSync(__dirname + '/icons/minecraft.png'),
-	rss: fs.readFileSync(__dirname + '/icons/rss.png')
-}
-
 /*--------------------------------------------------[express]--------------------------------------------------*/
 
 var app = express();
 
-//app.use(require('body-parser')());//might be useful later
 app.use(express.static(path.join(__dirname, '/../web/')));
 
 app.resource('api/modules', require('./routes/modules'));
 app.resource('api/channels', require('./routes/channels'));
 app.resource('api/settings', require('./routes/settings'));
 
-app.listen(config.http.port, function () {
+https.createServer({
+	key: fs.readFileSync(__dirname + '/ssl/ssl.key'),
+	cert: fs.readFileSync(__dirname + '/ssl/ssl.cert')
+}, app).listen(config.http.port, function () {
 	console.log('express is running on port ' + config.http.port);
-	// growl.sendNotification('Server Status', {
-	// 	title: 'HTTP server online',
-	// 	text: 'running on port ' + config.http.port
-	// });
 });
 
 /*--------------------------------------------------[tcp]--------------------------------------------------*/
@@ -57,7 +46,6 @@ servers.tcp = net.createServer(function (conn) {
 	});
 
 	conn.on("data", function(d) {
-		// #todo - test this
 		var data = JSON.parse(d);
 		db.getServer(data.id, function (err, server) {
 			if (!err) {
@@ -88,81 +76,80 @@ servers.tcp = net.createServer(function (conn) {
 	});
 }).listen(config.tcp.port, function () {
 	console.log('TCP server running on port ' + config.tcp.port);
-	// growl.sendNotification('Server Status', {
-	// 	title: 'TCP server online',
-	// 	text: 'running on port ' + config.tcp.port
-	// });
 });
 
 // connect to every server
-var dbServers = db.getServers();
-for (var i = 0; i < dbServers.length; i++) {
-	if(dbServers[i].id != config.id) {
-		connectToServer(dbServers[i]);
-		console.log('connecting to ' + dbServers[i].ip + ":" + dbServers[i].port);
-	}	
-}
+// var dbServers = db.getServers();
+// for (var i = 0; i < dbServers.length; i++) {
+// 	if(dbServers[i].id != config.id) {
+// 		connectToServer(dbServers[i]);
+// 		console.log('connecting to ' + dbServers[i].ip + ":" + dbServers[i].port);
+// 	}	
+// }
 
-function connectToServer (server) {
-	var socket = new net.Socket();
-	socket.connect(server.port, server.ip, function () {
-		console.log('connected to ' + server.ip + ':' + server.port);
+// function connectToServer (server) {
+// 	var socket = new net.Socket();
+// 	socket.connect(server.port, server.ip, function () {
+// 		console.log('connected to ' + server.ip + ':' + server.port);
 		
-		// send initial packet
-		socket.write(JSON.stringify({
-			'id': config.id,
-			'message': crypto.encrypt({
-				'from':'startup',
-				'data':'this is not a test'
-			}, server.key)
-		}));
-		socket.end();
-	});
+// 		// send initial packet
+// 		socket.write(JSON.stringify({
+// 			'id': config.id,
+// 			'message': crypto.encrypt({
+// 				'from':'startup',
+// 				'data':'this is not a test'
+// 			}, server.key)
+// 		}));
+// 		socket.end();
+// 	});
 
-	socket.on('data', function (data) {
-		// log message
-		console.log(data.toString());
-		data = crypto.decryptString(data.toString(), server.key);
-		console.log("Response from server: %s", data);
+// 	socket.on('data', function (data) {
+// 		// log message
+// 		console.log(data.toString());
+// 		data = crypto.decryptString(data.toString(), server.key);
+// 		console.log("Response from server: %s", data);
 		
-		// send message
-		socket.write(crypto.encryptString('test', server.key));
-		socket.end();
-	});
-	socket.on('error', function (err) {
-		socket.destroy();
-		setTimeout(function () {
-			connectToServer(server);
-		}, 60000);
-	});
-}
+// 		// send message
+// 		socket.write(crypto.encryptString('test', server.key));
+// 		socket.end();
+// 	});
+// 	socket.on('error', function (err) {
+// 		socket.destroy();
+// 		setTimeout(function () {
+// 			connectToServer(server);
+// 		}, 60000);
+// 	});
+// }
 
 /*--------------------------------------------------[old]--------------------------------------------------*/
+// getting icons
+// var icons = {
+// 	nodejs: fs.readFileSync(__dirname + '/icons/nodejs.png'),
+// 	rss: fs.readFileSync(__dirname + '/icons/rss.png')
+// }
+
 // this will be turned into seperate modules later
 // some of the code is for testing purposes only and will be moved to seperate files or deleted
 
 // configure growl
-var growler = require('growler');
-var growl = new growler.GrowlApplication('Messagenet');
+// var growler = require('growler');
+// var growl = new growler.GrowlApplication('Messagenet');
 
-growl.setNotifications({
-	'Response from Client': {
-		icon: icons.nodejs
-	},
-	'Server Status': {
-		icon: icons.nodejs
-	},
-	'startup': {
-		icon: icons.nodejs
-	},
-	'minecraft-server': {
-		icon: icons.minecraft
-	},
-	'rss': {
-		icon: icons.rss
-	}
-});
-growl.register();
+// growl.setNotifications({
+// 	'Response from Client': {
+// 		icon: icons.nodejs
+// 	},
+// 	'Server Status': {
+// 		icon: icons.nodejs
+// 	},
+// 	'startup': {
+// 		icon: icons.nodejs
+// 	},
+// 	'rss': {
+// 		icon: icons.rss
+// 	}
+// });
+// growl.register();
 
 // modules
 // new require(__dirname + '/modules/rss').Event('feedSubscription',{

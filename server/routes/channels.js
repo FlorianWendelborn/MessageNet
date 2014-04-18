@@ -11,7 +11,7 @@ exports.index = function(req, res) {
 }
 
 exports.show = function (req, res) {
-	db.getChannel(req.params.module, function (err, data) {
+	db.getChannel(req.params.channel, function (err, data) {
 		if (!err) {
 			res.send(data);
 		} else {

@@ -2,8 +2,9 @@
 	<details>
 		<summary>{{module.name}} version {{module.version}}</summary>
 		<p>
-			{{module.description}}
-			By {{module.author}}.
+			{{module.description}}<br>
+			By {{module.author}}.<br>
+			#{{module._id}}
 		</p>
 		<details ng-show="module.events.length>0">
 			<summary>{{module.events.length}} events</summary>

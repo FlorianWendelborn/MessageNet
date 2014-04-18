@@ -1,7 +1,4 @@
-config.json
-server/database/db.json
-server/icons/*
-server/ssl/*
 wip/
 tests/
-web/lib/*
+web/lib/
+*.nedb

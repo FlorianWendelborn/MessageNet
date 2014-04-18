@@ -2,8 +2,9 @@
 	<details>
 		<summary>{{channel.name}} version {{channel.version}}</summary>
 		<p>
-			{{channel.description}}
-			By {{channel.author}}.
+			{{channel.description}}<br>
+			By {{channel.author}}.<br>
+			#{{channel._id}}
 		</p>
 		<details ng-show="channel.events.length>0">
 			<summary>{{channel.events.length}} events</summary>
