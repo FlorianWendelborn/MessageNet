@@ -16,11 +16,18 @@ var app = angular.module('app', ['ngRoute', 'messageNetAPI']).config(function ($
 		})
 		.when( '/settings', {
 			templateUrl: 'html/settings.html',
-			requireLogin: true
+			requireLogin: true,
+			controller: 'SettingController'
+		})
+		.when( '/servers', {
+			templateUrl: 'html/servers.html',
+			requireLogin: true,
+			controller: 'ServerController'
 		})
 		.when( '/recipes', {
 			templateUrl: 'html/recipes.html',
-			requireLogin: true
+			requireLogin: true,
+			controller: 'RecipeController'
 		})
 		.when('/login', {
 			templateUrl: 'html/login.html',
@@ -84,4 +91,26 @@ app.controller('LoginController', function ($scope, $rootScope) {
 		}
 		//});
 	}
+});
+
+app.controller('SettingController', function ($scope, Settings, Setting) {
+	Settings.get({},function(settings) {
+		$scope.originalSettings = settings;
+		$scope.settings = settings;
+	});
+});
+
+app.controller('ServerController', function ($scope, Servers, Server) {
+	Servers.get({},function(servers) {
+		$scope.servers = servers;
+	});
+});
+
+app.controller('RecipeController', function ($scope, Recipes, Recipe) {
+	Recipes.get({},function(recipes) {
+		$scope.recipes = recipes;
+		console.log(recipes);
+	});
+	// var test = new Recipes({test: true, omg: 'wtfbbq'});
+	// test.$save();
 });

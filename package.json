@@ -1,0 +1,15 @@
+{
+	"name": "messagenet",
+	"homepage": "https://github.com/florianwendelborn/messagenet",
+	"repository": {
+		"type": "git",
+		"url": "git@github.com:florianwendelborn/messagenet.git"
+	},
+	"dependencies": {
+		"express": "4.0.0",
+		"express-resource": "1.0.0",
+		"nedb": "0.10.5",
+		"node-windows": "0.1.5"
+	},
+	"licence": "MIT"
+}

@@ -2,18 +2,16 @@ var Datastore = require('nedb')
   , db = {
 		modules: new Datastore({ filename: __dirname + '/modules.nedb' }),
 		channels: new Datastore({ filename: __dirname + '/channels.nedb' }),
-  		servers: new Datastore({ filename: __dirname + '/servers.nedb' })
+  		servers: new Datastore({ filename: __dirname + '/servers.nedb' }),
+  		settings: new Datastore({ filename: __dirname + '/settings.nedb' }),
+  		recipes: new Datastore({ filename: __dirname + '/recipes.nedb' })
 	}
 
-db.modules.loadDatabase(function (err) {
-	if (err) console.error(err);
-});
-db.channels.loadDatabase(function (err) {
-	if (err) console.error(err);
-});
-db.servers.loadDatabase(function (err) {
-	if (err) console.error(err);
-});
+for (var i in db) {
+	db[i].loadDatabase(function (err) {
+		if (err) console.error(err);
+	});
+}
 
 // modules
 exports.getModules = function (callback) {
@@ -40,4 +38,23 @@ exports.getServers = function (callback) {
 
 exports.getServer = function (id, callback) {
 	db.servers.findOne({_id: id}, callback);
+}
+
+// settings
+exports.getSettings = function (callback) {
+	db.settings.find({}, callback);
+}
+exports.getSetting = function (id, callback) {
+	db.settings.findOne({_id: id}, callback);
+}
+
+// recipes
+exports.getRecipes = function (callback) {
+	db.recipes.find({}, callback);
+}
+exports.getRecipe = function (id, callback) {
+	db.recipes.findOne({_id: id}, callback);
+}
+exports.addRecipe = function (recipe, callback) {
+	db.recipes.insert(recipe, callback);
 }

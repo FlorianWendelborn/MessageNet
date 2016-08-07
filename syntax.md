@@ -1,12 +1,14 @@
 # general idea
 - Recipe = (Channel->Event)->Data->(C.+Filter)->(Action<-Channel)
 - Options for Channel, Event, C., Filter, Action, maybe even for data
+- C. = Condition (?)
 - Event delivers data
 	- can be trigger or request
 - C.+Filter processes data
 	- C. emits true or false
 	- Filters change data
 - Actions do stuff with data
+- Limiters slow triggers down (example: temperature sensor - fires every 1 seconds but should only send a message once a day)
 
 # recipe
 {

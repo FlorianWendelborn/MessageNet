@@ -9,7 +9,8 @@ var net = require('net')
 
 // express
 var express = require('express')
-  , Resource = require('express-resource');
+  , Resource = require('express-resource')
+  , bodyParser = require('body-parser');
 
 // custom
 var crypto = require(__dirname + '/lib/messagenet-crypto/')
@@ -25,10 +26,13 @@ var servers = new Object();
 var app = express();
 
 app.use(express.static(path.join(__dirname, '/../web/')));
+app.use(bodyParser.json());
 
-app.resource('api/modules', require('./routes/modules'));
-app.resource('api/channels', require('./routes/channels'));
-app.resource('api/settings', require('./routes/settings'));
+app.resource('api/modules', require(__dirname + '/routes/modules'));
+app.resource('api/channels', require(__dirname + '/routes/channels'));
+app.resource('api/recipes', require(__dirname + '/routes/recipes'));
+app.resource('api/settings', require(__dirname + '/routes/settings'));
+app.resource('api/servers', require(__dirname + '/routes/servers'));
 
 https.createServer({
 	key: fs.readFileSync(__dirname + '/ssl/ssl.key'),
@@ -38,45 +42,45 @@ https.createServer({
 });
 
 /*--------------------------------------------------[tcp]--------------------------------------------------*/
-servers.tcp = net.createServer(function (conn) {
-	console.log("server connected");
+// servers.tcp = net.createServer(function (conn) {
+// 	console.log("server connected");
 
-	conn.on("end", function() {
-		console.log('Server: Client disconnected');
-	});
+// 	conn.on("end", function() {
+// 		console.log('Server: Client disconnected');
+// 	});
 
-	conn.on("data", function(d) {
-		var data = JSON.parse(d);
-		db.getServer(data.id, function (err, server) {
-			if (!err) {
-				// log access
-				console.log(server.ip + ':' + server.port + ': ' + d.toString());
+// 	conn.on("data", function(d) {
+// 		var data = JSON.parse(d);
+// 		db.getServer(data.id, function (err, server) {
+// 			if (!err) {
+// 				// log access
+// 				console.log(server.ip + ':' + server.port + ': ' + d.toString());
 
-				// decrypt
-				db.getServer(config.id, function (err, own) {
-					if (!err) {
-						var message = crypto.decrypt(data.message, own.key);
+// 				// decrypt
+// 				db.getServer(config.id, function (err, own) {
+// 					if (!err) {
+// 						var message = crypto.decrypt(data.message, own.key);
 
-						console.log(message);
+// 						console.log(message);
 
-						growl.sendNotification(message.from, {
-							title: server.name + ': ' + message.from,
-							text: message.data
-						});
-					} else {
-						console.error('could not get own server');
-						console.error(err);
-					}
-				});
-			} else {
-				console.error('could not get server');
-				console.error(err);
-			}
-		});
-	});
-}).listen(config.tcp.port, function () {
-	console.log('TCP server running on port ' + config.tcp.port);
-});
+// 						growl.sendNotification(message.from, {
+// 							title: server.name + ': ' + message.from,
+// 							text: message.data
+// 						});
+// 					} else {
+// 						console.error('could not get own server');
+// 						console.error(err);
+// 					}
+// 				});
+// 			} else {
+// 				console.error('could not get server');
+// 				console.error(err);
+// 			}
+// 		});
+// 	});
+// }).listen(config.tcp.port, function () {
+// 	console.log('TCP server running on port ' + config.tcp.port);
+// });
 
 // connect to every server
 // var dbServers = db.getServers();

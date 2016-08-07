@@ -1,7 +1,7 @@
 var db = require(__dirname + '/../lib/messagenet-database/');
 
 exports.index = function(req, res) {
-	db.getSettings(function (err, data) {
+	db.getServers(function (err, data) {
 		if (!err) {
 			res.send(data);
 		} else {
@@ -11,7 +11,7 @@ exports.index = function(req, res) {
 }
 
 exports.show = function (req, res) {
-	db.getSetting(req.params.setting, function (err, data) {
+	db.getServer(req.params.server, function (err, data) {
 		if (!err) {
 			res.send(data);
 		} else {
